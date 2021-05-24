@@ -1,0 +1,129 @@
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
+
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+public class MainFrame extends JFrame implements MouseListener {
+    JLabel start,help,exit;
+
+    ImageIcon quit1=new ImageIcon("quit.png");
+    ImageIcon quit2=new ImageIcon("quit2.png");
+    ImageIcon help1=new ImageIcon("help.png");
+    ImageIcon help2=new ImageIcon("help2.png");
+    ImageIcon start1=new ImageIcon("start1.png");
+    ImageIcon start2=new ImageIcon("start2.png");
+
+    public MainFrame() {
+        start2.setImage(start2.getImage().getScaledInstance(154, 100,Image.SCALE_DEFAULT));
+        start1.setImage(start1.getImage().getScaledInstance(154, 100,Image.SCALE_DEFAULT));
+        start = new JLabel(start2);//ImageIcon:图标
+        start.setBounds(300,200,154,100);
+        start.setEnabled(true);
+        start.addMouseListener(this);
+        this.add(start);
+
+        help2.setImage(help2.getImage().getScaledInstance(154, 100,Image.SCALE_DEFAULT));
+        help1.setImage(help1.getImage().getScaledInstance(154, 100,Image.SCALE_DEFAULT));
+        help = new JLabel(help2);
+        help.setBounds(300,367,154,100);
+        help.setEnabled(true);
+        help.addMouseListener(this);
+        this.add(help);
+
+        quit2.setImage(quit2.getImage().getScaledInstance(154, 100,Image.SCALE_DEFAULT));
+        quit1.setImage(quit1.getImage().getScaledInstance(154, 100,Image.SCALE_DEFAULT));
+        exit = new JLabel(quit2);
+        //不动
+        exit.setBounds(300, 533, 154, 100);
+        exit.setEnabled(true);
+        exit.addMouseListener(this);
+        this.add(exit);
+
+        MainPanel panel = new MainPanel();
+        this.add(panel);
+        this.setSize(864,654);//大小
+        this.setLocationRelativeTo(null);//居中
+        this.setUndecorated(true);//边框隐藏
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//默认关闭
+        this.setIconImage(new ImageIcon("logo.jpg").getImage());//logo
+        this.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new MainFrame();
+    }
+
+    static class MainPanel extends JPanel{//创建的MainPanel类，在MainFrame中调用
+        Image background;
+        public MainPanel() {
+            try {
+                background = ImageIO.read(new File("background.jpg"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+            g.drawImage(background, 0, 0,870,670, null);
+        }
+    }
+
+    //以下五个方法均为添加 implements MouseListener 后，快捷出来的
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        //鼠标点击
+        if(e.getSource().equals(start)){
+            //跳转到下一界面
+            new startgame();
+            //关闭当前界面
+        }else if(e.getSource().equals(exit)){
+            dispose();System.exit(0);
+        }else if(e.getSource().equals(help)){
+            JOptionPane.showMessageDialog(null, "《扫雷》是一款大众类的益智小游戏，于1992年发行。游戏目标是在最短的时间内根据点击格子出现的数字找出所有非雷格子，同时避免踩雷，踩到一个雷即全盘皆输。");
+        }
+
+
+    }
+    @Override
+    public void mousePressed(MouseEvent e) {
+        // TODO Auto-generated method stub
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        // TODO Auto-generated method stub
+    }
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        // 鼠标移入
+        if(e.getSource().equals(start)){//e指一个事件。e.getSource()获取事件
+            //如果鼠标移入到（start）组件（图片按钮）
+            start.setIcon(start1);
+        }else if(e.getSource().equals(help)){
+            help.setIcon(help1);
+        }else if(e.getSource().equals(exit)){
+            exit.setIcon(quit1);
+        }
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+        //鼠标移出
+        if(e.getSource().equals(start)){
+            start.setIcon(start2);
+        }else if(e.getSource().equals(help)){
+            help.setIcon(help2);
+        }else if(e.getSource().equals(exit)){
+            exit.setIcon(quit2);
+        }
+    }
+}
